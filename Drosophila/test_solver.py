@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from solver import Solver, _Parameters
+from .solver import Solver, _Parameters
 
 
 class TestParameter(unittest.TestCase):
