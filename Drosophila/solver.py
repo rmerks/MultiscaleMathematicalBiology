@@ -103,7 +103,7 @@ class _ArtistAnimator:
 
 
 class Solver:
-    def __init__(self, N, M, R, T, m, h, D, lamb, names=None, bicoid_diffusion=None, noflux=False):
+    def __init__(self, N, M, R, T, m, h, D, lamb, names=None, bicoid_diffusion=None, noflux=True):
         self._par = _Parameters(N, M, R, T, m, h, D, lamb)
         self._n = N * M
         self._dtype = np.float64
@@ -186,33 +186,10 @@ class Solver:
 
 
 def main():
-    N = 30
-    M = 2
-
-    dtype = np.float64
-    R = np.zeros((M,), dtype=dtype)
-    T = np.zeros((M, M), dtype=dtype)
-    m = np.zeros((M,), dtype=dtype)
-    h = np.zeros((M,), dtype=dtype)
-    D = np.zeros((M,), dtype=dtype)
-    lamb = np.zeros((M,), dtype=dtype)
-
-    R[:] = [1, 2]
-    T[0, :] = [3, 4]
-    T[1, :] = [5, 6]
-    m[:] = [7, 8]
-    D[:] = [0.1, 0.2]
-    h[:] = [9, 10]
-    lamb[:] = [0.4, 0.5]
-    y0 = np.random.rand(N*M)
-    ts, ys = Solver(N, M, R, T, m, h, D, lamb).solve(10, y0)
-
-    for k, t in enumerate(ts):
-        plt.figure()
-        plt.plot(range(N), ys[k])
-        plt.title(f"Time = {t}")
-        plt.savefig("./out" + f"{k}".zfill(7) + ".png", dpi=300)
-        plt.show()
+    import reintz 
+    solver = reintz._make_solver()
+    y0 = np.random.rand(30*5)
+    solver.solveAndSave(500, y0, "./", "reintz.mp4")
 
 
 if __name__ == '__main__':
