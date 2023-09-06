@@ -122,8 +122,8 @@ class Solver:
             np.ones(N)*(-2)) + np.diag(np.ones(N-1), 1) + np.diag(np.ones(N-1), -1)
 
         if noflux:
-            self._laplace[0, 0] = 1  # no flux
-            self._laplace[-1, -1] = 1  # no flux
+            self._laplace[0, 0] = -1  # no flux
+            self._laplace[-1, -1] = -1  # no flux
 
         if names:
             assert len(
