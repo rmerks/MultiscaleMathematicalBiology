@@ -1,0 +1,5 @@
+*.o
+.qmake.stash
+__pycache__
+*png
+*gif
