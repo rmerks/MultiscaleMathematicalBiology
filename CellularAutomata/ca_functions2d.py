@@ -227,8 +227,8 @@ def plot2d_animate(ca, title='', *, colormap='Greys', show_grid=False, show_marg
     ani = animation.FuncAnimation(fig, updatefig, interval=interval, blit=True, save_count=len(ca))
     if save:
         ani.save('CA.gif', dpi=dpi)
-    if show:
-        plt.show()
+    #if show:
+    #    plt.show()
     return ani
 
 

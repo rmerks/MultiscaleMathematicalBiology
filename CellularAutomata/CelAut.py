@@ -42,7 +42,7 @@ class CAsimulator:
                                       apply_rule=self.custom_rule, memoize="recursive", asynch=asynch)
 
     def output(self, save=True):
-        self.animation = plot2d_animate(self.cellular_automaton, save=save, show=show)
+        self.animation = plot2d_animate(self.cellular_automaton, save=save)
 
 def main():
     def evolve_rule(self, state, alive_count, x, y, field):
