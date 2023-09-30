@@ -41,13 +41,8 @@ class CAsimulator:
             self.cellular_automaton = evolve2d(self.field, timesteps=steps, neighbourhood=self.neighborhood,
                                       apply_rule=self.custom_rule, memoize="recursive", asynch=asynch)
 
-    def output(self, save=True, show=True):
-        if show == True:
-            from IPython.display import HTML
-            animation = plot2d_animate(self.cellular_automaton, save=save, show=False)
-            HTML(animation.to_html5_video())
-        else:
-            animation = plot2d_animate(self.cellular_automaton, save=save, show=show)
+    def output(self, save=True):
+        self.animation = plot2d_animate(self.cellular_automaton, save=save, show=show)
 
 def main():
     def evolve_rule(self, state, alive_count, x, y, field):
@@ -56,7 +51,6 @@ def main():
             new_state = 1
         else:
             new_state = 0
-    
         return new_state
     
     CA = CAsimulator()
@@ -65,7 +59,7 @@ def main():
 
     CAsimulator.evolve_rule = evolve_rule
     CA.run(steps=60, asynch=False)
-    CA.output(save=True, show=True)
+    CA.output(save=True)
 
 if __name__ == '__main__':
     main()
