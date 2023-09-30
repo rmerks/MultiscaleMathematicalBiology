@@ -43,14 +43,14 @@ class CAsimulator:
 
     def output(self, save=True, show=True):
         if show == True:
-            #from IPython.display import HTML
-            #animation = plot2d_animate(self.cellular_automaton, save=save, show=False)
-            #HTML(animation.to_html5_video())
-            animation = plot2d_animate(self.cellular_automaton, save=save, show=show)
+            from IPython.display import HTML
+            animation = plot2d_animate(self.cellular_automaton, save=save, show=False)
+            HTML(animation.to_html5_video())
         else:
             animation = plot2d_animate(self.cellular_automaton, save=save, show=show)
 
-def evolve_rule(self, state, alive_count, x, y, field):
+def main():
+    def evolve_rule(self, state, alive_count, x, y, field):
     new_state = state
     if alive_count == 3 or alive_count == 2:
         new_state = 1
@@ -58,20 +58,7 @@ def evolve_rule(self, state, alive_count, x, y, field):
         new_state = 0
 
     return new_state
-    #if state == 1:
-    #    if alive_count - 1 < 2:
-    #        return 0  # Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
-    #    if alive_count - 1 == 2 or alive_count - 1 == 3:
-    #        return 1  # Any live cell with two or three live neighbours lives on to the next generation.
-    #    if alive_count - 1> 3:
-    #        return 0  # Any live cell with more than three live neighbours dies, as if by overpopulation.
-    #else:
-    #    if alive_count == 3:
-    #        return 1  # Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-    #    else:
-    #        return 0
-
-def main():
+    
     CA = CAsimulator()
     CA.set_neighborhood("Moore")
     CA.set_percentage(50)
