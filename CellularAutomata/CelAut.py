@@ -50,7 +50,7 @@ class CAsimulator:
             animation = plot2d_animate(self.cellular_automaton, save=save, show=show)
 
 def main():
-        def evolve_rule(self, state, alive_count, x, y, field):
+    def evolve_rule(self, state, alive_count, x, y, field):
         new_state = state
         if alive_count == 3 or alive_count == 2:
             new_state = 1
