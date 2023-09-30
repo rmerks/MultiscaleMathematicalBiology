@@ -50,14 +50,14 @@ class CAsimulator:
             animation = plot2d_animate(self.cellular_automaton, save=save, show=show)
 
 def main():
-    def evolve_rule(self, state, alive_count, x, y, field):
-    new_state = state
-    if alive_count == 3 or alive_count == 2:
-        new_state = 1
-    else:
-        new_state = 0
-
-    return new_state
+        def evolve_rule(self, state, alive_count, x, y, field):
+        new_state = state
+        if alive_count == 3 or alive_count == 2:
+            new_state = 1
+        else:
+            new_state = 0
+    
+        return new_state
     
     CA = CAsimulator()
     CA.set_neighborhood("Moore")
