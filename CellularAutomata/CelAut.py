@@ -42,7 +42,7 @@ class CAsimulator:
                             memoize=False)
         else:
             self.cellular_automaton = evolve2d(self.field, timesteps=steps, neighbourhood=self.neighborhood,
-                                      apply_rule=self.custom_rule, memoize="True")
+                                      apply_rule=self.custom_rule, memoize=True)
 
     def output(self, save=True):
         self.animation = plot2d_animate(self.cellular_automaton, save=save)
