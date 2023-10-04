@@ -1,10 +1,9 @@
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-from matplotlib.animation import PillowWriter
 import matplotlib.collections as mcoll
 import numpy as np
-
+from tqdm import tqdm
 
 
 def plot2d(ca, timestep=None, title='', *, colormap='Greys', show_grid=False, show_margin=True, scale=0.6,
@@ -215,6 +214,7 @@ def plot2d_animate(ca, title='', *, colormap='Greys', show_grid=False, show_marg
         baseheight, basewidth = im.get_size()
         fig.set_size_inches(basewidth*scale, baseheight*scale, forward=True)
 
+
     i = {'index': 0}
     def updatefig(*args):
         i['index'] += 1
@@ -224,7 +224,7 @@ def plot2d_animate(ca, title='', *, colormap='Greys', show_grid=False, show_marg
         if autoscale:
             im.autoscale()
         return im, grid
-    ani = animation.FuncAnimation(fig, updatefig, interval=interval, blit=True, save_count=len(ca))
+    ani = animation.FuncAnimation(fig, updatefig, interval=interval, blit=True, repeat=False)
     if save:
         ani.save('CA.gif', dpi=dpi)
     #if show:
@@ -317,7 +317,7 @@ def evolve2d_block(cellular_automaton, block_size, timesteps, apply_rule):
     return np.concatenate((cellular_automaton, array[1:]), axis=0)
 
 
-def evolve2d(cellular_automaton, timesteps, apply_rule, r=1, neighbourhood='Moore', memoize=False, asynch=False):
+def evolve2d(cellular_automaton, timesteps, apply_rule, r=1, neighbourhood='Moore', memoize=False):
     """
     Evolves the given cellular automaton for the specified time steps. Applies the given function to each cell during
     the evolution. A cellular automaton is represented here as an array of arrays, or matrix. This function expects
@@ -378,11 +378,11 @@ def evolve2d(cellular_automaton, timesteps, apply_rule, r=1, neighbourhood='Moor
                                  neighbourhood_indices, von_neumann_mask, memoize, cell_indices, cell_idx_to_neigh_idx)
     else:
         return _evolve2d_fixed(cellular_automaton, timesteps, apply_rule, neighbourhood, rows, cols,
-                               neighbourhood_indices, von_neumann_mask, memoize, asynch, cell_indices, cell_idx_to_neigh_idx)
+                               neighbourhood_indices, von_neumann_mask, memoize, cell_indices, cell_idx_to_neigh_idx)
 
 
 def _evolve2d_fixed(cellular_automaton, timesteps, apply_rule, neighbourhood, rows, cols,
-                    neighbourhood_indices, von_neumann_mask, memoize, asynch, cell_indices, cell_idx_to_neigh_idx):
+                    neighbourhood_indices, von_neumann_mask, memoize, cell_indices, cell_idx_to_neigh_idx):
     """
     Evolves the given cellular automaton for a fixed of timesteps.
 
@@ -427,7 +427,7 @@ def _evolve2d_fixed(cellular_automaton, timesteps, apply_rule, neighbourhood, ro
     memo_table = {}
     recursive_cache = _MemoizationCache()
 
-    for t in range(1, timesteps):
+    for t in tqdm(range(1, timesteps), desc="running..."):
         cell_layer = array[t - 1]
 
         if memoize == "recursive":
@@ -436,31 +436,15 @@ def _evolve2d_fixed(cellular_automaton, timesteps, apply_rule, neighbourhood, ro
                   neighbourhood, von_neumann_mask, t)
             array[t] = next_state
         else:
-            if asynch == True:
-                next_state = array[t-1]
-                for _ in range(rows*cols):
-                    col = np.random.randint(cols)
-                    row = np.random.randint(rows)
+            for row, cell_row in enumerate(cell_layer):
+                for col, cell in enumerate(cell_row):
                     n = _get_neighbourhood(cell_layer, neighbourhood_indices, row, col, neighbourhood, von_neumann_mask)
                     if memoize is True:
-                        next_state[row][col] = _get_memoized(n, (row, col), t, apply_rule, memo_table)
+                        array[t][row][col] = _get_memoized(n, (row, col), t, apply_rule, memo_table)
                     elif memoize is False:
-                        next_state[row][col] = apply_rule(n, (row, col), t)
+                        array[t][row][col] = apply_rule(n, (row, col), t)
                     else:
                         raise Exception("unsupported memoization option: %s" % memoize)
-                array[t] = next_state
-            else:
-                next_state = np.zeros((rows, cols))
-                for row, cell_row in enumerate(cell_layer):
-                    for col, cell in enumerate(cell_row):
-                        n = _get_neighbourhood(cell_layer, neighbourhood_indices, row, col, neighbourhood, von_neumann_mask)
-                        if memoize is True:
-                            next_state[row][col] = _get_memoized(n, (row, col), t, apply_rule, memo_table)
-                        elif memoize is False:
-                            next_state[row][col] = apply_rule(n, (row, col), t)
-                        else:
-                            raise Exception("unsupported memoization option: %s" % memoize)
-                array[t] = next_state
 
     return np.concatenate((cellular_automaton, array[1:]), axis=0)
 
@@ -819,7 +803,6 @@ def init_simple2d(rows, cols, val=1, dtype=np.int32, coords=None):
             raise TypeError("coords must be a list or tuple of length 2")
         x[coords[0]][coords[1]] = val
     else:
-        print(x.shape[0]//2, x.shape[1]//2)
         x[x.shape[0]//2][x.shape[1]//2] = val
     return np.array([x])
 

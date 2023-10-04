@@ -1,12 +1,14 @@
 from .ca_functions2d import *
+from .ca_functions import *
 import numpy as np
 
 class CAsimulator:
     def __init__(self):
-        self.field = np.array([np.zeros((100,100))])
+        self.shape = (100, 100)
+        self.field = np.array([np.zeros(self.shape)])
 
     def set_percentage(self, percentage):
-        field = np.zeros((100,100))
+        field = np.zeros(self.shape)
         locs = np.vstack(np.where(field==0)).T
         n = len(locs)
         div =  1 / (percentage / 100)
@@ -36,10 +38,11 @@ class CAsimulator:
     def run(self, steps, asynch):
         if asynch == True:
             self.cellular_automaton = evolve2d(self.field, timesteps=steps, neighbourhood=self.neighborhood,
-                                        apply_rule=self.custom_rule, memoize=True, asynch=asynch)
+                            apply_rule=AsynchronousRule(self.custom_rule, num_cells=self.shape, randomize_each_cycle=True),
+                            memoize=False)
         else:
             self.cellular_automaton = evolve2d(self.field, timesteps=steps, neighbourhood=self.neighborhood,
-                                      apply_rule=self.custom_rule, memoize="recursive", asynch=asynch)
+                                      apply_rule=self.custom_rule, memoize="True")
 
     def output(self, save=True):
         self.animation = plot2d_animate(self.cellular_automaton, save=save)
