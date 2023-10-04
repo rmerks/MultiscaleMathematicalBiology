@@ -1,5 +1,4 @@
 from .ca_functions2d import *
-from .ca_functions import *
 import numpy as np
 
 class CAsimulator:
@@ -38,11 +37,10 @@ class CAsimulator:
     def run(self, steps, asynch):
         if asynch == True:
             self.cellular_automaton = evolve2d(self.field, timesteps=steps, neighbourhood=self.neighborhood,
-                            apply_rule=AsynchronousRule(self.custom_rule, num_cells=self.shape, randomize_each_cycle=True),
-                            memoize=False)
+                            apply_rule=self.custom_rule, memoize=False, asynch=True)
         else:
             self.cellular_automaton = evolve2d(self.field, timesteps=steps, neighbourhood=self.neighborhood,
-                                      apply_rule=self.custom_rule, memoize=True)
+                                      apply_rule=self.custom_rule, memoize=True, asynch=False)
 
     def output(self, save=True):
         self.animation = plot2d_animate(self.cellular_automaton, save=save)
