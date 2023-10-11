@@ -16,7 +16,7 @@ class CAsimulator:
         self.field = np.array([field])
 
     def set_neighborhood(self, nbhstring):
-        options = ['Moore', 'VonNeumann']
+        options = ['Moore', 'von Neumann']
         if nbhstring not in options:
             raise ValueError("Neigborhood \""+nbhstring+"\" not available. Choose from "+str(options))
         else:
