@@ -45,8 +45,8 @@ class CAsimulator:
             self.cellular_automaton = evolve2d(self.field, timesteps=steps, neighbourhood=self.neighborhood,
                                       apply_rule=self.custom_rule, memoize=True, asynch=False)
 
-    def output(self, save=True):
-        self.animation = plot2d_animate(self.cellular_automaton, save=save)
+    def output(self, save=True, file='CA.gif'):
+        self.animation = plot2d_animate(self.cellular_automaton, save=save, savename=file)
 
 def main():
     def evolve_rule(self, state, alive_count, x, y, field):

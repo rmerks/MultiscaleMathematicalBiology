@@ -164,7 +164,7 @@ def plot2d_spacetime(ca, alpha=None, title='', show=True):
 
 
 def plot2d_animate(ca, title='', *, colormap='Greys', show_grid=False, show_margin=True, scale=0.6, dpi=80,
-                   interval=50, save=False, autoscale=False, show=True, **imshow_kwargs):
+                   interval=50, save=False, autoscale=False, show=True, savename='CA.gif',**imshow_kwargs):
     """
     Animate the given 2D cellular automaton.
 
@@ -211,7 +211,7 @@ def plot2d_animate(ca, title='', *, colormap='Greys', show_grid=False, show_marg
 
     grid = _add_grid_lines(ca, ax, show_grid)
 
-    im = plt.imshow(ca[0], animated=True, cmap=cmap, **imshow_kwargs)
+    im = plt.imshow(ca[0], interpolation='none', animated=True, cmap=cmap, **imshow_kwargs)
     if not show_margin:
         baseheight, basewidth = im.get_size()
         fig.set_size_inches(basewidth*scale, baseheight*scale, forward=True)
@@ -227,7 +227,7 @@ def plot2d_animate(ca, title='', *, colormap='Greys', show_grid=False, show_marg
         return im, grid
     ani = animation.FuncAnimation(fig, updatefig, interval=interval, blit=True, save_count=len(ca))
     if save:
-        ani.save('CA.gif', dpi=dpi)
+        ani.save(savename, dpi=dpi)
     #if show:
     #    plt.show()
     return ani
