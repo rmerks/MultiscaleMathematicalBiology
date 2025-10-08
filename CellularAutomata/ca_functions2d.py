@@ -217,15 +217,13 @@ def plot2d_animate(ca, title='', *, colormap='Greys', show_grid=False, show_marg
         fig.set_size_inches(basewidth*scale, baseheight*scale, forward=True)
 
     i = {'index': 0}
-    def updatefig(*args):
-        i['index'] += 1
-        if i['index'] == len(ca):
-            i['index'] = 0
-        im.set_array(ca[i['index']])
-        if autoscale:
-            im.autoscale()
-        return im, grid
-    ani = animation.FuncAnimation(fig, updatefig, interval=interval, blit=True, save_count=len(ca))
+    def updatefig(frame):
+    im.set_array(ca[frame])
+    if autoscale:
+        im.autoscale()
+    return [im]
+
+    ani = animation.FuncAnimation(fig, updatefig, frames=range(len(ca)), interval=interval, blit=True, repeat=True)
     if save:
         ani.save(savename, dpi=dpi)
     #if show:
