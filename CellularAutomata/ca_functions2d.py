@@ -218,10 +218,10 @@ def plot2d_animate(ca, title='', *, colormap='Greys', show_grid=False, show_marg
 
     i = {'index': 0}
     def updatefig(frame):
-    im.set_array(ca[frame])
-    if autoscale:
-        im.autoscale()
-    return [im]
+        im.set_array(ca[frame])
+        if autoscale:
+            im.autoscale()
+        return [im]
 
     ani = animation.FuncAnimation(fig, updatefig, frames=range(len(ca)), interval=interval, blit=True, repeat=True)
     if save:
